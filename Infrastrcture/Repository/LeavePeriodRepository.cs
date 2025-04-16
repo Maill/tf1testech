@@ -15,7 +15,7 @@ namespace Infrastrcture.Repository
 
         public LeavePeriodDTO? GetLeavePeriod(string employeeId)
         {
-            return _data.FirstOrDefault(x => x.EmployeeId == employeeId);
+            return _data.FirstOrDefault(lp => lp.EmployeeId == employeeId);
         }
 
         public List<LeavePeriodDTO> GetAllLeavePeriods()
@@ -26,7 +26,7 @@ namespace Infrastrcture.Repository
         public void UpdateLeavePeriod(LeavePeriod leavePeriod)
         {
             var dto = leavePeriod.ToDTO();
-            _data.Remove(dto);
+            _data.RemoveAll(lp => lp.EmployeeId == dto.EmployeeId);
             _data.Add(dto);
         }
     }

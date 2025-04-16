@@ -10,11 +10,12 @@ namespace Tests
         public void LeavePeriodShouldBeValid()
         {
             //Arrange
-            var leavePeriod = new LeavePeriodDemand(LeavePeriodType.Vacation)
+            var leavePeriod = new LeavePeriodDemand()
             {
                 Comment = "This is a comment",
                 StartDate = DateTime.Now,
-                EndDate = DateTime.Now.AddDays(1)
+                EndDate = DateTime.Now.AddDays(1),
+                Type = LeavePeriodType.Vacation,
             };
 
             //Act
@@ -33,11 +34,12 @@ namespace Tests
         public void LeavePeriodDatesShouldBeInvalid(DateTime startDate, DateTime endDate)
         {
             //Arrange
-            var leavePeriod = new LeavePeriodDemand(LeavePeriodType.Vacation)
+            var leavePeriod = new LeavePeriodDemand()
             {
                 Comment = "This is a comment",
                 StartDate = startDate,
-                EndDate = endDate
+                EndDate = endDate,
+                Type = LeavePeriodType.Vacation,
             };
 
             //Act
@@ -54,11 +56,12 @@ namespace Tests
         public void LeavePeriodStatusChangeShouldBeValid(LeavePeriodStatus status)
         {
             //Arrange
-            var leavePeriod = new LeavePeriodDemand(LeavePeriodType.Maternity)
+            var leavePeriod = new LeavePeriodDemand()
             {
                 Comment = "This is a comment",
                 StartDate = DateTime.Now,
-                EndDate = DateTime.Now.AddDays(1)
+                EndDate = DateTime.Now.AddDays(1),
+                Type = LeavePeriodType.Maternity,
             };
 
             //Act
@@ -74,11 +77,12 @@ namespace Tests
         public void LeavePeriodStatusChangeShouldBeIllegal(LeavePeriodStatus status)
         {
             //Arrange
-            var leavePeriod = new LeavePeriodDemand(LeavePeriodType.Maternity, LeavePeriodStatus.Approuved)
+            var leavePeriod = new LeavePeriodDemand(LeavePeriodStatus.Approuved)
             {
                 Comment = "This is a comment",
                 StartDate = DateTime.Now,
-                EndDate = DateTime.Now.AddDays(1)
+                EndDate = DateTime.Now.AddDays(1),
+                Type=LeavePeriodType.Maternity,
             };
 
             //Act

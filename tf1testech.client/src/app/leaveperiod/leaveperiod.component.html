@@ -1,3 +1,4 @@
+<p *ngIf="errorMessage !== ''" style="color: red;">{{errorMessage}}</p><br />
 <app-getleaveperiod (getInitialLeavePeriod)="getInitialLeavePeriod($event)" *ngIf="!getDone" />
 <app-createleaveperiod [leavePeriod]="this.leavePeriod" (updateLeavePeriod)="updateLeavePeriod($event)" (back)="resetComponent()" *ngIf="getDone && showCreateForm" />
-<app-detailleaveperiod [leavePeriod]="this.leavePeriod" (back)="resetComponent()" *ngIf="getDone && showDetails" />
+<app-detailleaveperiod [leavePeriod]="this.leavePeriod" (back)="resetComponent()" (pollingDataEvent)="poolingLeavePeriod()" *ngIf="getDone && showDetails" />

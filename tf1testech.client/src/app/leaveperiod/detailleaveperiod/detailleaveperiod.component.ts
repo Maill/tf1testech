@@ -11,10 +11,17 @@ import { LeavePeriodTypeLabelMapping } from '../../../models/enums/LeavePeriodTy
 export class DetailleaveperiodComponent {
   @Input() public leavePeriod: LeavePeriodDTO | undefined = undefined;
   @Output() public back : EventEmitter<void> = new EventEmitter<void>();
+  @Output() public pollingDataEvent : EventEmitter<void> = new EventEmitter<void>();
+  private poolingEvent = setInterval(
+    () => { 
+      this.leavePeriod!.leavePeriodDemand.status === 0 
+        ? this.pollingDataEvent.emit() 
+        : clearInterval(this.poolingEvent) 
+  }, 1000);
   public leavePeriodTypeLabelMapping = LeavePeriodTypeLabelMapping;
 
   public getStartDate() : Date {
-    return new Date(this.leavePeriod!.leavePeriodDemand.startDate)
+    return new Date(this.leavePeriod!.leavePeriodDemand.startDate);
   }
 
   public getEndDate() : Date {

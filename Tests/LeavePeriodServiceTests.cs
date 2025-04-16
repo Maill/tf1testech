@@ -35,11 +35,12 @@ namespace Tests
             var expectedLeavePeriod = new LeavePeriod()
             {
                 Employee = new Employee("test"),
-                LeavePeriodDemand = new LeavePeriodDemand(LeavePeriodType.Vacation)
+                LeavePeriodDemand = new LeavePeriodDemand()
                 {
                     Comment = "This is a comment",
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now.AddDays(1),
+                    Type = LeavePeriodType.Vacation
                 }
             };
 
@@ -70,11 +71,12 @@ namespace Tests
             var expectedLeavePeriod = new LeavePeriod()
             {
                 Employee = new Employee("test"),
-                LeavePeriodDemand = new LeavePeriodDemand(LeavePeriodType.Sick)
+                LeavePeriodDemand = new LeavePeriodDemand()
                 {
                     Comment = "This is a comment",
                     StartDate = startDate,
                     EndDate = endDate,
+                    Type = LeavePeriodType.Sick
                 }
             };
 
@@ -108,6 +110,43 @@ namespace Tests
         }
 
         [Fact]
+        public void ShouldNotCreateBecauseLeavePeriodAlreadyExists()
+        {
+            //Arrange
+            var startDate = DateTime.Now;
+            var endDate = DateTime.Now.AddDays(11);
+
+            var repository = new LeavePeriodRepository();
+            var service = new LeavePeriodService(repository);
+            var leavePeriodCreationDto = new LeavePeriodCreationDTO(
+                "test",
+                "This is a comment",
+                startDate,
+                endDate,
+                LeavePeriodType.Sick
+            );
+            repository.AddLeavePeriod(leavePeriodCreationDto.ToDomain());
+            var expectedLeavePeriod = new LeavePeriod()
+            {
+                Employee = new Employee("test"),
+                LeavePeriodDemand = new LeavePeriodDemand()
+                {
+                    Comment = "This is a comment",
+                    StartDate = startDate,
+                    EndDate = endDate,
+                    Type = LeavePeriodType.Sick
+                }
+            };
+
+            //Act
+            var exception = Record.Exception(() => service.CreateLeavePeriod(leavePeriodCreationDto));
+
+            //Assert
+            Assert.NotNull(exception);
+            Assert.IsType<LeavePeriodAlreadyExistsException>(exception);
+        }
+
+        [Fact]
         public void ShouldUpdateLeavePeriodForEmployee()
         {
             //Arrange
@@ -124,11 +163,12 @@ namespace Tests
             var actualLeavePeriod = new LeavePeriod()
             {
                 Employee = new Employee("test"),
-                LeavePeriodDemand = new LeavePeriodDemand(LeavePeriodType.Sick)
+                LeavePeriodDemand = new LeavePeriodDemand()
                 {
                     Comment = "This is a comment",
                     StartDate = startDate,
                     EndDate = endDate,
+                    Type = LeavePeriodType.Sick
                 }
             };
             repository.AddLeavePeriod(actualLeavePeriod);
@@ -136,12 +176,13 @@ namespace Tests
             var expectedLeavePeriod = new LeavePeriod()
             {
                 Employee = new Employee("test"),
-                LeavePeriodDemand = new LeavePeriodDemand(LeavePeriodType.Sick, LeavePeriodStatus.Approuved)
+                LeavePeriodDemand = new LeavePeriodDemand(LeavePeriodStatus.Approuved)
                 {
                     Comment = "This is a comment",
                     ManagerComment = "This is a manager's comment",
                     StartDate = startDate,
-                    EndDate = endDate
+                    EndDate = endDate,
+                    Type= LeavePeriodType.Sick
                 }
             };
 
@@ -169,12 +210,13 @@ namespace Tests
             var actualLeavePeriod = new LeavePeriod()
             {
                 Employee = new Employee("test"),
-                LeavePeriodDemand = new LeavePeriodDemand(LeavePeriodType.Sick, LeavePeriodStatus.Rejected)
+                LeavePeriodDemand = new LeavePeriodDemand(LeavePeriodStatus.Rejected)
                 {
                     Comment = "This is a comment",
                     ManagerComment = "Already done",
                     StartDate = startDate,
                     EndDate = endDate,
+                    Type= LeavePeriodType.Sick
                 }
             };
             repository.AddLeavePeriod(actualLeavePeriod);
@@ -182,12 +224,13 @@ namespace Tests
             var expectedLeavePeriod = new LeavePeriod()
             {
                 Employee = new Employee("test"),
-                LeavePeriodDemand = new LeavePeriodDemand(LeavePeriodType.Sick, LeavePeriodStatus.AwaitingResponse)
+                LeavePeriodDemand = new LeavePeriodDemand(LeavePeriodStatus.AwaitingResponse)
                 {
                     Comment = "This is a comment",
                     ManagerComment = "This is a manager's comment",
                     StartDate = startDate,
-                    EndDate = endDate
+                    EndDate = endDate,
+                    Type= LeavePeriodType.Sick
                 }
             };
 
@@ -197,6 +240,29 @@ namespace Tests
             //Assert
             Assert.NotNull(exception);
             Assert.IsType<LeavePeriodIllegalStatusChangeException>(exception);
+        }
+
+        [Fact]
+        public void ShouldNotUpdateIfLeavePeriodDoesntExists()
+        {
+            //Arrange
+            var startDate = DateTime.Now;
+            var endDate = DateTime.Now.AddDays(11);
+
+            var repository = new LeavePeriodRepository();
+            var service = new LeavePeriodService(repository);
+            var leavePeriodUpdateDto = new LeavePeriodUpdateDTO(
+                "test",
+                "This is a manager's comment",
+                LeavePeriodStatus.Approuved
+            );
+
+            //Act
+            var exception = Record.Exception(() => service.UpdateLeavePeriod(leavePeriodUpdateDto));
+
+            //Assert
+            Assert.NotNull(exception);
+            Assert.IsType<LeavePeriodDoesntExistsException>(exception);
         }
     }
 }

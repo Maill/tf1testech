@@ -14,5 +14,11 @@
 <h3>Date de début : {{getStartDate().toLocaleString()}}</h3>
 <h3>Date de fin : {{getEndDate().toLocaleString()}}</h3>
 <h3>Type de congés : {{leavePeriodTypeLabelMapping.get(this.leavePeriod!.leavePeriodDemand.type)}}</h3>
+@if (leavePeriod!.leavePeriodDemand.comment !== '') {
+    <h3>Commentaire : {{leavePeriod!.leavePeriodDemand.comment}}</h3>
+}
+@if (leavePeriod!.leavePeriodDemand.managerComment !== '') {
+    <h3>Commentaire Manager : {{leavePeriod!.leavePeriodDemand.managerComment}}</h3>
+}
 
 <button (click)="backButton()">Retour</button>
