@@ -1,0 +1,25 @@
+<h1>Créer un congé pour : {{this.leavePeriod!.employeeId}}</h1>
+<p *ngIf="errorMessage !== ''" style="color: red;">{{errorMessage}}</p><br />
+<form [formGroup]="leavePeriodCreationForm" (ngSubmit)="createLeavePeriod()">
+    <label for="type">Type de congés : </label>
+    <select id="type" name="type" formControlName="type" required>
+        @for (leavePeriodType of leavePeriodTypeLabelMapping; track $index) {
+            <option value="{{leavePeriodType[0]}}">{{leavePeriodType[1]}}</option>
+        }
+    </select><br />
+
+    <label for="startDate">Date de début : </label>
+    <input id="startDate" name="startDate" type="datetime-local" min="{{minStartDate}}" formControlName="startDate" required/><br />
+
+    <label for="endDate">Date de fin : </label>
+    <input id="endDate" name="endDate" type="datetime-local" min="{{minEndDate}}" formControlName="endDate" required/><br />
+
+    <label for="comment">Commentaire (optionnel) : </label><br />
+    <textarea id="comment" name="comment" formControlName="comment"></textarea><br />
+    
+    <p *ngIf="leavePeriodCreationForm.touched && leavePeriodCreationForm.invalid" style="color: red;">La date de début doit etre strictement inférieure à la date de fin.</p>
+    <button class="button" type="submit" [disabled]="leavePeriodCreationForm.invalid || formSubmitted">Créer</button>
+</form>
+
+<br />
+<button class="button" (click)="backButton()">Retour</button>

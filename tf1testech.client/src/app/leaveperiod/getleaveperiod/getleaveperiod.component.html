@@ -1,0 +1,6 @@
+<p *ngIf="errorMessage !== ''" style="color: red;">{{errorMessage}}</p><br />
+<form [formGroup]="employeeIdForm" (ngSubmit)="getLeavePeriod()">
+    <label>Entre votre identifiant : </label>
+    <input type="text" id="employeeId" formControlName="employeeId" required />
+    <button class="button" type="submit" [disabled]="!employeeIdForm.valid">S'identifier</button>
+</form>

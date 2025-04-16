@@ -1,0 +1,7 @@
+@tf1testech.Server_HostAddress = http://localhost:5109
+
+GET {{tf1testech.Server_HostAddress}}/leaveperiod/
+Accept: application/json; charset=utf-8
+{
+  "EmployeeId": "test"
+}
