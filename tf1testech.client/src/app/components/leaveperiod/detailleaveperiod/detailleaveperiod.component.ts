@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import LeavePeriodDTO from '../../../models/LeavePeriodDTO';
-import { LeavePeriodTypeLabelMapping } from '../../../models/enums/LeavePeriodType';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import LeavePeriodDTO from '../../../../models/LeavePeriodDTO';
+import { LeavePeriodTypeLabelMapping } from '../../../../models/enums/LeavePeriodType';
 
 @Component({
   selector: 'app-detailleaveperiod',
@@ -8,27 +8,31 @@ import { LeavePeriodTypeLabelMapping } from '../../../models/enums/LeavePeriodTy
   templateUrl: './detailleaveperiod.component.html',
   styleUrl: './detailleaveperiod.component.css'
 })
-export class DetailleaveperiodComponent {
-  @Input() public leavePeriod: LeavePeriodDTO | undefined = undefined;
+export class DetailleaveperiodComponent implements OnDestroy {
+  @Input() public leavePeriod!: LeavePeriodDTO;
   @Output() public back : EventEmitter<void> = new EventEmitter<void>();
   @Output() public pollingDataEvent : EventEmitter<void> = new EventEmitter<void>();
   private poolingEvent = setInterval(
     () => { 
-      this.leavePeriod!.leavePeriodDemand.status === 0 
+      this.leavePeriod!.leavePeriodDemand!.status === 0 
         ? this.pollingDataEvent.emit() 
         : clearInterval(this.poolingEvent) 
   }, 1000);
   public leavePeriodTypeLabelMapping = LeavePeriodTypeLabelMapping;
 
   public getStartDate() : Date {
-    return new Date(this.leavePeriod!.leavePeriodDemand.startDate);
+    return new Date(this.leavePeriod!.leavePeriodDemand!.startDate);
   }
 
   public getEndDate() : Date {
-      return new Date(this.leavePeriod!.leavePeriodDemand.endDate);
+      return new Date(this.leavePeriod!.leavePeriodDemand!.endDate);
   }
 
   backButton() {
     this.back.emit();
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.poolingEvent) 
   }
 }

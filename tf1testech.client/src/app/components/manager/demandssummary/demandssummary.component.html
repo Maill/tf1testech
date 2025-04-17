@@ -1,0 +1,31 @@
+<h1>Toutes les demandes : </h1>
+<table>
+    <thead>
+        <th>ID Employé</th>
+        <th>Date de début</th>
+        <th>Date de fin</th>
+        <th>Type de congés</th>
+        <th>Status actuel</th>
+        <th>Commentaire Employé</th>
+        <th>Commentaire Manager</th>
+    </thead>
+    <tbody>
+        @for (leavePeriod of leavePeriods | async; track $index){
+            <tr>
+                <th>{{leavePeriod.employeeId}}</th>
+                <td>{{getDate(leavePeriod.leavePeriodDemand!.startDate).toLocaleString()}}</td>
+                <td>{{getDate(leavePeriod.leavePeriodDemand!.endDate).toLocaleString()}}</td>
+                <td>{{leavePeriodTypeLabelMapping.get(leavePeriod.leavePeriodDemand!.type)}}</td>
+                @if(leavePeriod.leavePeriodDemand!.status === 0){
+                    <td><strong style="color: blue;">{{leavePeriodStatusLabelMapping.get(leavePeriod.leavePeriodDemand!.status)}}</strong></td>
+                } @else if (leavePeriod.leavePeriodDemand!.status === 1) {
+                    <td><strong style="color: green;">{{leavePeriodStatusLabelMapping.get(leavePeriod.leavePeriodDemand!.status)}}</strong></td>
+                } @else {
+                    <td><strong style="color: red;">{{leavePeriodStatusLabelMapping.get(leavePeriod.leavePeriodDemand!.status)}}</strong></td>
+                }
+                <td>{{leavePeriod.leavePeriodDemand!.comment}}</td>
+                <td>{{leavePeriod.leavePeriodDemand!.managerComment}}</td>
+            </tr>
+        }
+    </tbody>
+</table>

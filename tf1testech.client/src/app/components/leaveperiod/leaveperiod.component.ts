@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
-import LeavePeriodDTO from '../../models/LeavePeriodDTO';
-import { LeavePeriodService } from '../services/leave-period.service';
+import LeavePeriodDTO from '../../../models/LeavePeriodDTO';
+import { LeavePeriodService } from '../../services/leave-period.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -11,7 +11,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class LeaveperiodComponent {
   private leavePeriodService : LeavePeriodService = inject(LeavePeriodService);
-  public leavePeriod: LeavePeriodDTO | undefined = undefined;
+  public leavePeriod?: LeavePeriodDTO;
   public getDone : boolean = false;
   public showCreateForm = false;
   public showDetails = false;

@@ -1,9 +1,10 @@
 ﻿using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.ValueObjects;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace tf1testech.Server.Controllers
+namespace Infrastrcture.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -29,10 +30,12 @@ namespace tf1testech.Server.Controllers
             try
             {
                 return Ok(_leavePeriodService.CreateLeavePeriod(leavePeriodCreationDTO));
-            } catch (LeavePeriodInvalidDatesException ex)
+            }
+            catch (LeavePeriodInvalidDatesException ex)
             {
                 return BadRequest(ex.Message);
-            } catch (LeavePeriodAlreadyExistsException ex)
+            }
+            catch (LeavePeriodAlreadyExistsException ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
@@ -44,10 +47,12 @@ namespace tf1testech.Server.Controllers
             try
             {
                 return Ok(_leavePeriodService.UpdateLeavePeriod(leavePeriodUpdateDTO));
-            } catch (LeavePeriodIllegalStatusChangeException ex)
+            }
+            catch (LeavePeriodIllegalStatusChangeException ex)
             {
                 return BadRequest(ex.Message);
-            } catch (LeavePeriodDoesntExistsException ex)
+            }
+            catch (LeavePeriodDoesntExistsException ex)
             {
                 return NotFound(ex.Message);
             }

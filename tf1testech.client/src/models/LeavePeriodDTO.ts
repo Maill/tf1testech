@@ -2,7 +2,7 @@ import LeavePeriodDemandDTO from "./LeavePeriodDemandDTO";
 
 class LeavePeriodDTO {
     employeeId: string;
-    leavePeriodDemand: LeavePeriodDemandDTO;
+    leavePeriodDemand?: LeavePeriodDemandDTO;
 
     constructor(employeeId: string, leavePeriodDemandDTO: LeavePeriodDemandDTO){
         this.employeeId = employeeId;

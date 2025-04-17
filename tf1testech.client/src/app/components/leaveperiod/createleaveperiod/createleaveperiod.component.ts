@@ -1,10 +1,10 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { LeavePeriodType, LeavePeriodTypeLabelMapping } from '../../../models/enums/LeavePeriodType';
-import LeavePeriodDTO from '../../../models/LeavePeriodDTO';
-import LeavePeriodCreationDTO from '../../../models/LeavePeriodCreationDTO';
-import { LeavePeriodService } from '../../services/leave-period.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { LeavePeriodTypeLabelMapping, LeavePeriodType } from '../../../../models/enums/LeavePeriodType';
+import LeavePeriodCreationDTO from '../../../../models/LeavePeriodCreationDTO';
+import LeavePeriodDTO from '../../../../models/LeavePeriodDTO';
+import { LeavePeriodService } from '../../../services/leave-period.service';
 
 @Component({
   selector: 'app-createleaveperiod',
@@ -13,12 +13,11 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrl: './createleaveperiod.component.css'
 })
 export class CreateleaveperiodComponent {
-  @Input() public leavePeriod: LeavePeriodDTO | undefined = undefined;
+  @Input() public leavePeriod?: LeavePeriodDTO;
   @Output() updateLeavePeriod : EventEmitter<LeavePeriodDTO> = new EventEmitter<LeavePeriodDTO>();
   @Output() public back : EventEmitter<void> = new EventEmitter<void>();
   private leavePeriodService : LeavePeriodService = inject(LeavePeriodService);
   public leavePeriodCreationForm : FormGroup;
-  private leavePeriodCreation : LeavePeriodCreationDTO | undefined = undefined;
   public leavePeriodTypeLabelMapping = LeavePeriodTypeLabelMapping;
   public minStartDate : string = this.addDaysToCurrentDateAndFormatForInput(0);
   public minEndDate : string = this.addDaysToCurrentDateAndFormatForInput(1);
@@ -48,7 +47,7 @@ export class CreateleaveperiodComponent {
 
   async createLeavePeriod(){
     this.formSubmitted = true;
-    this.leavePeriodCreation = new LeavePeriodCreationDTO(
+    const leavePeriodCreation = new LeavePeriodCreationDTO(
       this.leavePeriod!.employeeId, 
       this.leavePeriodCreationForm.get('comment')!.value,
       this.leavePeriodCreationForm.get('startDate')!.value,
@@ -57,7 +56,7 @@ export class CreateleaveperiodComponent {
     );
 
     try {
-      this.updateLeavePeriod.emit(await this.leavePeriodService.createLeavePeriod(this.leavePeriodCreation));
+      this.updateLeavePeriod.emit(await this.leavePeriodService.createLeavePeriod(leavePeriodCreation));
     } catch(error) {
       console.log(error);
       const httpError = error as HttpErrorResponse;

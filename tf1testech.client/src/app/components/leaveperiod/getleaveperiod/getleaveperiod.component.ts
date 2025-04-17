@@ -1,8 +1,8 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import LeavePeriodDTO from '../../../models/LeavePeriodDTO';
-import { LeavePeriodService } from '../../services/leave-period.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import LeavePeriodDTO from '../../../../models/LeavePeriodDTO';
+import { LeavePeriodService } from '../../../services/leave-period.service';
 
 @Component({
   selector: 'app-getleaveperiod',

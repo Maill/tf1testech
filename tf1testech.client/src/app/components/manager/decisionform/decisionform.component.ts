@@ -1,31 +1,25 @@
-import { Component, inject } from '@angular/core';
-import { LeavePeriodService } from '../services/leave-period.service';
-import LeavePeriodDTO from '../../models/LeavePeriodDTO';
-import { LeavePeriodTypeLabelMapping } from '../../models/enums/LeavePeriodType';
-import { LeavePeriodStatus, LeavePeriodStatusLabelMapping, LeavePeriodStatusLabelMappingManagerDecision } from '../../models/enums/LeavePeriodStatus';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import LeavePeriodDTO from '../../../../models/LeavePeriodDTO';
+import { LeavePeriodStatus, LeavePeriodStatusLabelMappingManagerDecision } from '../../../../models/enums/LeavePeriodStatus';
 import { FormControl, FormGroup } from '@angular/forms';
-import LeavePeriodUpdateDTO from '../../models/LeavePeriodUpdateDTO';
+import LeavePeriodUpdateDTO from '../../../../models/LeavePeriodUpdateDTO';
+import { LeavePeriodService } from '../../../services/leave-period.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-manager',
+  selector: 'app-decisionform',
   standalone: false,
-  templateUrl: './manager.component.html',
-  styleUrl: './manager.component.css'
+  templateUrl: './decisionform.component.html',
+  styleUrl: './decisionform.component.css'
 })
-export class ManagerComponent {
+export class DecisionformComponent {
+  @Input() public leavePeriods!: Promise<LeavePeriodDTO[]>;
+  @Output() public refreshData: EventEmitter<void> = new EventEmitter<void>();
+  @Output() public setErrorMessage: EventEmitter<string> = new EventEmitter<string>();
   private leavePeriodService: LeavePeriodService = inject(LeavePeriodService);
-  public leavePeriods: Promise<LeavePeriodDTO[]> = this.leavePeriodService.getAllLeavePeriods();
-  public leavePeriodTypeLabelMapping = LeavePeriodTypeLabelMapping;
-  public leavePeriodStatusLabelMapping = LeavePeriodStatusLabelMapping;
   public leavePeriodStatusLabelMappingManagerDecision = LeavePeriodStatusLabelMappingManagerDecision;
   public managerDecisionForm: FormGroup = this.resetManagerDecisionForm();
   public formSubmitted = false;
-  public errorMessage : string = "";
-
-  public getDate(date: string) : Date {
-    return new Date(date)
-  }
 
   resetManagerDecisionForm() : FormGroup {
     return new FormGroup({
@@ -49,9 +43,9 @@ export class ManagerComponent {
       await this.leavePeriodService.updateLeavePeriod(updateLeavePeriod);
     } catch(error) {
       const httpError = error as HttpErrorResponse;
-      this.errorMessage = `[HTTP ERROR][${httpError.status}] - ${httpError.error}`;
+      this.setErrorMessage.emit(`[HTTP ERROR][${httpError.status}] - ${httpError.error}`);
     }
-    this.leavePeriods = this.leavePeriodService.getAllLeavePeriods();
+    this.refreshData.emit();
 
     this.formSubmitted = false;
   }

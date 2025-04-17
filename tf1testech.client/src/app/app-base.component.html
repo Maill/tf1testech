@@ -1,5 +1,5 @@
-<button style="margin-right: 2%;" (click)="showLeavePeriodFormButton()">Créer un demande de congés</button>
-<button (click)="showManagerFormButton()">Accès Manager</button>
+<button style="margin-right: 2%;" (click)="showLeavePeriodFormButton()" [disabled]="showLeavePeriodForm">Créer un demande de congés</button>
+<button (click)="showManagerFormButton()" [disabled]="showManagerForm">Accès Manager</button>
 
 <div style="margin-top: 2%;">
     <app-leaveperiod *ngIf="showLeavePeriodForm"></app-leaveperiod>
